@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boas Práticas nas Eleições 2026 — Programação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Serif:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --azul-claro: #E6F1FB;
+    --azul-medio: #B5D4F4;
+    --azul-escuro: #0C447C;
+    --verde-claro: #EAF3DE;
+    --verde-escuro: #27500A;
+    --amber-claro: #FAEEDA;
+    --amber-escuro: #633806;
+    --cinza-claro: #F1EFE8;
+    --cinza-borda: #D3D1C7;
+    --texto: #1a1a18;
+    --texto-secundario: #5F5E5A;
+    --texto-terciario: #888780;
+    --fundo: #fafaf8;
+    --fundo-card: #ffffff;
+    --borda: rgba(0,0,0,0.12);
+    --borda-hover: rgba(0,0,0,0.22);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--fundo);
+    color: var(--texto);
+    min-height: 100vh;
+  }
+
+  .topo {
+    background: #fff;
+    border-bottom: 0.5px solid var(--cinza-borda);
+    padding: 2rem 1.5rem 1.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .topo-logo {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--texto-terciario);
+    margin-bottom: 6px;
+  }
+
+  .topo-titulo {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--texto);
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .topo-meta {
+    font-size: 13px;
+    color: var(--texto-secundario);
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+
+  .topo-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .conteudo {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .dia-secao { margin-bottom: 2.5rem; }
+
+  .dia-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+  }
+
+  .dia-label-text {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--texto-terciario);
+    white-space: nowrap;
+  }
+
+  .dia-label-linha {
+    flex: 1;
+    height: 0.5px;
+    background: var(--cinza-borda);
+  }
+
+  .turno-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--texto-terciario);
+    margin: 1.25rem 0 0.6rem;
+    padding-left: 2px;
+  }
+
+  .grade {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px;
+  }
+
+  .cartao {
+    background: var(--fundo-card);
+    border: 0.5px solid var(--borda);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: border-color 0.15s;
+  }
+
+  .cartao:hover { border-color: var(--borda-hover); }
+
+  .cartao-especial {
+    border-left: 3px solid #BA7517;
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  .cartao-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+  }
+
+  .tag-plenario { background: var(--azul-claro); color: var(--azul-escuro); }
+  .tag-ccj      { background: var(--verde-claro); color: var(--verde-escuro); }
+  .tag-especial  { background: var(--amber-claro); color: var(--amber-escuro); }
+
+  .horario {
+    font-size: 12px;
+    color: var(--texto-terciario);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .titulo-palestra {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--texto);
+    line-height: 1.45;
+  }
+
+  .palestrante {
+    font-size: 13px;
+    color: var(--texto-secundario);
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    line-height: 1.4;
+  }
+
+  .btn-inscricao {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--azul-escuro);
+    background: var(--azul-claro);
+    border: 0.5px solid var(--azul-medio);
+    border-radius: var(--radius-sm);
+    padding: 5px 11px;
+    text-decoration: none;
+    width: fit-content;
+    transition: background 0.15s;
+  }
+
+  .btn-inscricao:hover { background: var(--azul-medio); }
+
+  .btn-inscricao-vazio {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--texto-terciario);
+    background: var(--cinza-claro);
+    border: 0.5px solid var(--cinza-borda);
+    border-radius: var(--radius-sm);
+    padding: 5px 11px;
+    width: fit-content;
+  }
+
+  .coffee-break {
+    font-size: 13px;
+    color: var(--texto-secundario);
+    padding: 9px 14px;
+    background: var(--cinza-claro);
+    border-radius: var(--radius-sm);
+    border: 0.5px solid var(--cinza-borda);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+  }
+
+  .ico { width: 14px; height: 14px; display: inline-block; vertical-align: middle; flex-shrink: 0; }
+
+  .rodape {
+    text-align: center;
+    font-size: 12px;
+    color: var(--texto-terciario);
+    padding: 2rem 1.5rem;
+    border-top: 0.5px solid var(--cinza-borda);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 600px) {
+    .topo { padding: 1.25rem 1rem 1rem; }
+    .conteudo { padding: 1.25rem 1rem 3rem; }
+    .grade { grid-template-columns: 1fr; }
+    .topo-titulo { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topo">
+  <div class="topo-logo">Escola do Legislativo · ALEP</div>
+  <div class="topo-titulo">Boas Práticas nas Eleições 2026</div>
+  <div class="topo-meta">
+    <span>
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      17 e 18 de junho de 2026
+    </span>
+    <span>
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      Assembleia Legislativa do Paraná
+    </span>
+  </div>
+</div>
+
+<div class="conteudo" id="programacao"></div>
+
+<div class="rodape">Escola do Legislativo · Assembleia Legislativa do Paraná</div>
+
+<script>
+/* ======================================================
+   DADOS DA PROGRAMAÇÃO
+   Para editar: altere titulo, palestrante, horario ou link.
+   Para inserir link de inscrição: preencha o campo link: 'https://...'
+   Deixe link: '' para exibir "Link em breve".
+   ====================================================== */
+const PALESTRAS = [
+  {
+    id: 'abertura',
+    dia: '17 de junho (quarta-feira)',
+    turno: 'Manhã — abertura oficial',
+    ambiente: 'especial',
+    horario: '08h30–11h30',
+    titulo: 'Cerimônia de abertura oficial',
+    palestrante: 'Mesa institucional: Presidente ALEP, Diretor Escola do Legislativo, TRE-PR, OAB, MP Eleitoral + conferencista de renome',
+    especial: true,
+    link: ''
+  },
+  {
+    id: 'd1p1',
+    dia: '17 de junho (quarta-feira)',
+    turno: 'Tarde — Plenário',
+    ambiente: 'plenario',
+    horario: '14h00',
+    titulo: 'IA, deepfakes e desinformação: novos desafios da propaganda eleitoral',
+    palestrante: 'Diogo Rais (aguardando confirmação)',
+    link: ''
+  },
+  {
+    id: 'd1p2',
+    dia: '17 de junho (quarta-feira)',
+    turno: 'Tarde — Plenário',
+    ambiente: 'plenario',
+    horario: '15h15',
+    titulo: 'Propaganda eleitoral e boas práticas na pré-campanha',
+    palestrante: 'Indicação do TRE (a definir)',
+    link: ''
+  },
+  {
+    id: 'd1p3',
+    dia: '17 de junho (quarta-feira)',
+    turno: 'Tarde — Plenário',
+    ambiente: 'plenario',
+    horario: '16h15',
+    titulo: 'Prevenção de irregularidades: boas práticas na gestão pública e nas campanhas',
+    palestrante: 'Indicação do TRE (a definir)',
+    link: ''
+  },
+  {
+    id: 'd1p4',
+    dia: '17 de junho (quarta-feira)',
+    turno: 'Tarde — Plenário',
+    ambiente: 'plenario',
+    horario: '17h15',
+    titulo: 'Condutas vedadas em ano eleitoral: erros recorrentes e como evitá-los',
+    palestrante: 'TRE e Procuradoria Regional Eleitoral (a definir)',
+    link: ''
+  },
+  {
+    id: 'd1c1',
+    dia: '17 de junho (quarta-feira)',
+    turno: 'Tarde — Auditório CCJ',
+    ambiente: 'ccj',
+    horario: '14h00',
+    titulo: 'Conteúdo digital, formatos e horizontalidade',
+    palestrante: 'Marcello Natale',
+    link: ''
+  },
+  {
+    id: 'd1c2',
+    dia: '17 de junho (quarta-feira)',
+    turno: 'Tarde — Auditório CCJ',
+    ambiente: 'ccj',
+    horario: '15h00',
+    titulo: 'Antes do algoritmo, a política já era feita de pessoas',
+    palestrante: 'Gustavo Rodrigo',
+    link: ''
+  },
+  {
+    id: 'd1c3',
+    dia: '17 de junho (quarta-feira)',
+    turno: 'Tarde — Auditório CCJ',
+    ambiente: 'ccj',
+    horario: '16h00',
+    titulo: 'Dados não votam sozinhos: estratégia, comunicação e política',
+    palestrante: 'Fabrício Souza',
+    link: ''
+  },
+  {
+    id: 'd2p1',
+    dia: '18 de junho (quinta-feira)',
+    turno: 'Manhã — Plenário',
+    ambiente: 'plenario',
+    horario: '09h00',
+    titulo: 'Direito processual eleitoral e a natureza dos bens jurídicos tutelados',
+    palestrante: 'Prof. Luiz Gustavo de Andrade e Prof. Roosevelt Arraes (confirmados)',
+    link: ''
+  },
+  {
+    id: 'd2p2',
+    dia: '18 de junho (quinta-feira)',
+    turno: 'Manhã — Plenário',
+    ambiente: 'plenario',
+    horario: '10h15',
+    titulo: 'Publicidade institucional em ano eleitoral: limites legais, riscos e boas práticas',
+    palestrante: 'Dr. Fernando Maciel, Dylliard, Priscilla Mânica (membros ALEP)',
+    link: ''
+  },
+  {
+    id: 'd2p3',
+    dia: '18 de junho (quinta-feira)',
+    turno: 'Manhã — Plenário',
+    ambiente: 'plenario',
+    horario: '11h15',
+    titulo: 'Atualizações do direito eleitoral: as resoluções do pleito de 2026',
+    palestrante: 'José Rodrigo Sade (confirmado)',
+    link: ''
+  },
+  {
+    id: 'd2c1',
+    dia: '18 de junho (quinta-feira)',
+    turno: 'Manhã — Auditório CCJ',
+    ambiente: 'ccj',
+    horario: '09h00',
+    titulo: 'Cenários e leitura de dados eleitorais',
+    palestrante: 'Paraná Pesquisa / Murilo Hidalgo (a confirmar)',
+    link: ''
+  },
+  {
+    id: 'd2c2',
+    dia: '18 de junho (quinta-feira)',
+    turno: 'Manhã — Auditório CCJ',
+    ambiente: 'ccj',
+    horario: '10h30',
+    titulo: 'A notícia também é estratégia: jornalismo na política',
+    palestrante: 'Daiane Basso (a confirmar)',
+    link: ''
+  },
+  {
+    id: 'd2p4',
+    dia: '18 de junho (quinta-feira)',
+    turno: 'Tarde — Plenário',
+    ambiente: 'plenario',
+    horario: '14h00',
+    titulo: 'Crimes eleitorais e conexos: a competência',
+    palestrante: 'Dr. Julio Jacob (confirmado) + a definir',
+    link: ''
+  },
+  {
+    id: 'd2p5',
+    dia: '18 de junho (quinta-feira)',
+    turno: 'Tarde — Plenário',
+    ambiente: 'plenario',
+    horario: '16h00',
+    titulo: 'Participação feminina, cotas de gênero e enfrentamento à violência política',
+    palestrante: 'Carla Karpstein + indicação TRE',
+    link: ''
+  },
+  {
+    id: 'd2p6',
+    dia: '18 de junho (quinta-feira)',
+    turno: 'Tarde — Plenário',
+    ambiente: 'plenario',
+    horario: '17h15',
+    titulo: 'Uso estratégico e responsável da IA nas campanhas eleitorais (mesa redonda)',
+    palestrante: 'Paola Manfroi (coord.) · Diogo Rais, Patrícia Peck, Juiz TRE, OAB e outros (a confirmar)',
+    link: ''
+  },
+  {
+    id: 'd2c3',
+    dia: '18 de junho (quinta-feira)',
+    turno: 'Tarde — Auditório CCJ',
+    ambiente: 'ccj',
+    horario: '14h00',
+    titulo: 'Comunicação política e confiança pública em tempos digitais',
+    palestrante: 'A definir',
+    link: ''
+  },
+  {
+    id: 'd2c4',
+    dia: '18 de junho (quinta-feira)',
+    turno: 'Tarde — Auditório CCJ',
+    ambiente: 'ccj',
+    horario: '15h00',
+    titulo: 'Redes sociais, impulsionamento e responsabilidade jurídica nas eleições',
+    palestrante: 'Guilherme Gonçalves, Marilda Silveira ou Francieli Campos (a definir)',
+    link: ''
+  },
+  {
+    id: 'd2c5',
+    dia: '18 de junho (quinta-feira)',
+    turno: 'Tarde — Auditório CCJ',
+    ambiente: 'ccj',
+    horario: '16h00',
+    titulo: 'Tema a definir',
+    palestrante: 'Prof. Jeferson Thauny ou outro (a definir)',
+    link: ''
+  },
+  {
+    id: 'encerramento',
+    dia: '18 de junho (quinta-feira)',
+    turno: 'Encerramento oficial',
+    ambiente: 'especial',
+    horario: '11h30',
+    titulo: 'Encerramento oficial do evento',
+    palestrante: 'Profa. Luciana Veiga, Prof. Emerson Cervi, Prof. Jeferson Thauny',
+    especial: true,
+    link: ''
+  }
+];
+
+/* ── ÍCONES ── */
+const icoRelogio = `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`;
+const icoUser    = `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
+const icoExt     = `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+const icoCafe    = `<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>`;
+
+function renderCartao(p) {
+  const especial = p.especial ? ' cartao-especial' : '';
+  const tagHtml = p.ambiente === 'plenario'
+    ? '<span class="tag tag-plenario">Plenário</span>'
+    : p.ambiente === 'ccj'
+    ? '<span class="tag tag-ccj">Auditório CCJ</span>'
+    : '<span class="tag tag-especial">Evento especial</span>';
+
+  const acaoHtml = p.link
+    ? `<a class="btn-inscricao" href="${p.link}" target="_blank" rel="noopener">${icoExt} Inscrição</a>`
+    : `<span class="btn-inscricao-vazio">${icoRelogio} Link em breve</span>`;
+
+  return `<div class="cartao${especial}">
+    <div class="cartao-top">
+      <div class="tags">${tagHtml}</div>
+      <span class="horario">${icoRelogio} ${p.horario}</span>
+    </div>
+    <div class="titulo-palestra">${p.titulo}</div>
+    <div class="palestrante">${icoUser} <span>${p.palestrante}</span></div>
+    ${acaoHtml}
+  </div>`;
+}
+
+function renderizar() {
+  const container = document.getElementById('programacao');
+  const dias = [...new Set(PALESTRAS.map(p => p.dia))];
+  let html = '';
+
+  dias.forEach(dia => {
+    html += `<div class="dia-secao">
+      <div class="dia-label">
+        <span class="dia-label-text">${dia}</span>
+        <div class="dia-label-linha"></div>
+      </div>`;
+
+    const turnos = [...new Set(PALESTRAS.filter(p => p.dia === dia).map(p => p.turno))];
+    turnos.forEach(turno => {
+      const grupo = PALESTRAS.filter(p => p.dia === dia && p.turno === turno);
+      html += `<div class="turno-label">${turno}</div>`;
+
+      if (turno === 'Tarde — Plenário' && dia === '18 de junho (quinta-feira)') {
+        const antes  = grupo.filter(p => p.id === 'd2p4');
+        const depois = grupo.filter(p => ['d2p5','d2p6'].includes(p.id));
+        html += `<div class="grade">${antes.map(renderCartao).join('')}</div>`;
+        html += `<div class="coffee-break">${icoCafe} <span>15h30 — coffee break</span></div>`;
+        html += `<div class="grade">${depois.map(renderCartao).join('')}</div>`;
+      } else {
+        html += `<div class="grade">${grupo.map(renderCartao).join('')}</div>`;
+      }
+    });
+
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+renderizar();
+</script>
+</body>
+</html>
